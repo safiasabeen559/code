@@ -1,0 +1,164 @@
+﻿@page "/counter"
+@attribute [Authorize(Roles = "Administrator,school")]
+<PageTitle>Compact Dashboard</PageTitle>
+
+<h1 class="dashboard-title">Admin Dashboard</h1>
+
+<div class="dashboard-container">
+    <!-- Card for Total Students -->
+    <div class="dashboard-card total-students-card">
+        <div class="card-icon">
+            <i class="fa fa-users"></i>
+        </div>
+        <div class="card-content">
+            <h3>Total Students</h3>
+            <p>@totalStudents</p>
+        </div>
+    </div>
+
+    <!-- Card for Total Faculty -->
+    <div class="dashboard-card total-faculty-card">
+        <div class="card-icon">
+            <i class="fa fa-chalkboard-teacher"></i>
+        </div>
+        <div class="card-content">
+            <h3>Total Faculty</h3>
+            <p>@totalFaculty</p>
+        </div>
+    </div>
+
+    <!-- Card for Total Classes -->
+    <div class="dashboard-card total-classes-card">
+        <div class="card-icon">
+            <i class="fa fa-school"></i>
+        </div>
+        <div class="card-content">
+            <h3>Total Classes</h3>
+            <p>@totalClasses</p>
+        </div>
+    </div>
+
+    <!-- Card for Total Sections -->
+    <div class="dashboard-card total-sections-card">
+        <div class="card-icon">
+            <i class="fa fa-layer-group"></i>
+        </div>
+        <div class="card-content">
+            <h3>Total Sections</h3>
+            <p>@totalSections</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* General Styling */
+    .dashboard-title {
+        text-align: center;
+        font-size: 2rem;
+        color: #34495e;
+        font-weight: bold;
+        margin-top: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .dashboard-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin: 30px auto;
+        max-width: 800px;
+        padding: 10px;
+    }
+
+    /* Card Styling */
+    .dashboard-card {
+        background-color: #ecf0f1;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        transition: transform 0.2s ease;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-icon {
+        font-size: 2rem;
+        color: #ffffff;
+        background-color: #3498db;
+        padding: 15px;
+        border-radius: 50%;
+        margin-right: 15px;
+    }
+
+    .total-students-card .card-icon {
+        background-color: #2ecc71;
+    }
+
+    .total-faculty-card .card-icon {
+        background-color: #e74c3c;
+    }
+
+    .total-classes-card .card-icon {
+        background-color: #9b59b6;
+    }
+
+    .total-sections-card .card-icon {
+        background-color: #f1c40f;
+    }
+
+    .card-content h3 {
+        font-size: 1.2rem;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .card-content p {
+        font-size: 1.8rem;
+        color: #34495e;
+        font-weight: bold;
+    }
+
+    /* Counter Section */
+    .counter-display {
+        text-align: center;
+        font-size: 1.2rem;
+        margin-top: 30px;
+        color: #7f8c8d;
+    }
+
+    .increment-button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+        .increment-button:hover {
+            background-color: #2980b9;
+        }
+</style>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    // Mock data for the dashboard
+    private int totalStudents = 180;   // Replace with actual data
+    private int totalFaculty = 20;     // Replace with actual data
+    private int totalClasses = 10;     // Replace with actual data
+    private int totalSections = 4;     // Replace with actual data
+}

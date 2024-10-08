@@ -1,0 +1,117 @@
+﻿@page "/Shift"
+@attribute [Authorize(Roles = "Administrator,school")]
+
+<h1 class="page-title">Shift</h1>
+
+<p class="instruction-text">View student details for both shifts:</p>
+
+<!-- Display both shifts' data in a table -->
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Shift</th>
+                <th>Class</th>
+                <th>Number of Students</th>
+                <th>Subjects</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Morning</td>
+                <td>@MorningClassName</td>
+                <td>@MorningStudentCount</td>
+                <td>@MorningSubjects</td>
+                <td>
+                    <button class="btn btn-danger" @onclick="DeleteMorningShift">Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Evening</td>
+                <td>@EveningClassName</td>
+                <td>@EveningStudentCount</td>
+                <td>@EveningSubjects</td>
+                <td>
+                    <button class="btn btn-danger" @onclick="DeleteEveningShift">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<a href="newshiftinfo" class="btn btn-primary">Add New Shift</a> <!-- Button to add new shift -->
+
+<style>
+    .page-title {
+        text-align: center;
+        color: #003366; /* Dark blue */
+        margin-top: 20px;
+    }
+
+    .instruction-text {
+        text-align: center;
+        color: #666; /* Gray */
+        margin: 10px 0;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f4f6f9; /* Light gray */
+            color: #2c3e50;
+        }
+
+    .btn-danger {
+        background-color: #dc3545; /* Red */
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333; /* Darker red */
+        }
+</style>
+
+@code {
+    // Data for Morning shift
+    private string MorningClassName = "Morning Class A";
+    private int MorningStudentCount = 30;
+    private string MorningSubjects = "English, Math, Science";
+
+    // Data for Evening shift
+    private string EveningClassName = "Evening Class B";
+    private int EveningStudentCount = 25;
+    private string EveningSubjects = "Math, Science, History";
+
+    // Method to delete morning shift
+    private void DeleteMorningShift()
+    {
+        MorningClassName = "Deleted"; // Example action
+        MorningStudentCount = 0;
+        MorningSubjects = string.Empty;
+    }
+
+    // Method to delete evening shift
+    private void DeleteEveningShift()
+    {
+        EveningClassName = "Deleted"; // Example action
+        EveningStudentCount = 0;
+        EveningSubjects = string.Empty;
+    }
+}

@@ -1,0 +1,251 @@
+﻿@page "/timetable"
+@attribute [Authorize(Roles = "Administrator,school")]
+
+<h1 class="page-title">Timetable</h1>
+
+<p class="instruction-text">View the class timetable below:</p>
+
+<div class="timetable-buttons-container">
+    <a href="newtimetableinfo" class="btn btn-primary">Add New Timetable Entry</a> <!-- Button to add new timetable -->
+</div>
+
+<div class="search-filters">
+    <input type="text" class="form-control" placeholder="Search by Class..." @bind="searchClass" />
+    <input type="text" class="form-control" placeholder="Search by Subject..." @bind="searchSubject" />
+    <button class="btn btn-secondary" @onclick="SearchTimetable">Search</button>
+</div>
+
+<table class="timetable-table">
+    <thead>
+        <tr>
+            <th>Class</th>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Actions</th> <!-- New column for actions -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in filteredTimetableEntries)
+        {
+            <tr>
+                <td>@entry.Class</td>
+                <td>@entry.Day</td>
+                <td>@entry.Time</td>
+                <td>@entry.Subject</td>
+                <td>
+                    <a href="edittimetable/@entry.Id" class="btn btn-secondary btn-sm">Edit</a> <!-- Edit Button -->
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteTimetableEntry(entry.Id)">Del</button> <!-- Delete Button -->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    /* Basic Styling */
+    .page-title {
+        font-size: 2rem;
+        text-align: center;
+        margin: 20px 0;
+        color: #333;
+    }
+
+    .instruction-text {
+        font-size: 1rem;
+        text-align: center;
+        margin: 10px 0;
+        color: #666;
+    }
+
+    .timetable-buttons-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .search-filters {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 200px;
+        margin: 0 10px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .timetable-table {
+        width: 80%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .timetable-table th, .timetable-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        .timetable-table th {
+            background-color: #f2f2f2;
+        }
+
+        .timetable-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .timetable-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    .btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    /* Basic Styling */
+    .page-title {
+        font-size: 2rem;
+        text-align: center;
+        margin: 20px 0;
+        color: #333;
+    }
+
+    .instruction-text {
+        font-size: 1rem;
+        text-align: center;
+        margin: 10px 0;
+        color: #666;
+    }
+
+    .timetable-buttons-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Styling the search filters */
+    .search-filters {
+        display: flex;
+        justify-content: center;
+        gap: 15px; /* Space between the input fields and button */
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 250px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .timetable-table {
+        width: 80%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .timetable-table th, .timetable-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        .timetable-table th {
+            background-color: #f2f2f2;
+        }
+
+        .timetable-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .timetable-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    .btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+</style>
+
+@code {
+    private List<TimetableEntry> timetableEntries = new List<TimetableEntry>
+    {
+        new TimetableEntry { Id = 1, Class = "1st Grade", Day = "Monday", Time = "9:00 AM - 10:00 AM", Subject = "English" },
+        new TimetableEntry { Id = 2, Class = "1st Grade", Day = "Monday", Time = "10:15 AM - 11:15 AM", Subject = "Math" },
+        new TimetableEntry { Id = 3, Class = "2nd Grade", Day = "Monday", Time = "9:00 AM - 10:00 AM", Subject = "Science" },
+        new TimetableEntry { Id = 4, Class = "2nd Grade", Day = "Tuesday", Time = "10:15 AM - 11:15 AM", Subject = "Art" },
+        new TimetableEntry { Id = 5, Class = "3rd Grade", Day = "Wednesday", Time = "9:00 AM - 10:00 AM", Subject = "History" },
+        new TimetableEntry { Id = 6, Class = "4th Grade", Day = "Thursday", Time = "10:15 AM - 11:15 AM", Subject = "Geography" },
+        new TimetableEntry { Id = 7, Class = "5th Grade", Day = "Friday", Time = "9:00 AM - 10:00 AM", Subject = "Computer Science" }
+    };
+
+    private string searchClass = "";
+    private string searchSubject = "";
+
+    private List<TimetableEntry> filteredTimetableEntries => timetableEntries
+        .Where(e => (string.IsNullOrEmpty(searchClass) || e.Class.Contains(searchClass, StringComparison.OrdinalIgnoreCase)) &&
+                    (string.IsNullOrEmpty(searchSubject) || e.Subject.Contains(searchSubject, StringComparison.OrdinalIgnoreCase)))
+        .ToList();
+
+    private void SearchTimetable()
+    {
+        // Search logic is handled in the filteredTimetableEntries property
+    }
+
+    private void DeleteTimetableEntry(int entryId)
+    {
+        // Logic to delete the timetable entry based on entryId
+        timetableEntries.RemoveAll(e => e.Id == entryId);
+    }
+
+    public class TimetableEntry
+    {
+        public int Id { get; set; }
+        public string Class { get; set; }
+        public string Day { get; set; }
+        public string Time { get; set; }
+        public string Subject { get; set; }
+    }
+}

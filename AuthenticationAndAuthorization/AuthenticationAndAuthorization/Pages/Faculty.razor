@@ -1,0 +1,251 @@
+﻿@page "/faculty"
+@attribute [Authorize(Roles = "Administrator,school")]
+
+<h1 class="page-title">Faculty</h1>
+
+<p class="instruction-text">Meet our dedicated teachers:</p>
+
+<div class="faculty-buttons-container">
+    <a href="newfacultyinfo" class="btn btn-primary">Add New Faculty</a> <!-- Button to add new faculty -->
+</div>
+
+<div class="search-filters">
+    <input type="text" class="form-control" placeholder="Search by Name..." @bind="searchName" />
+    <input type="text" class="form-control" placeholder="Search by Subject..." @bind="searchSubject" />
+    <button class="btn btn-secondary" @onclick="SearchFaculty">Search</button>
+</div>
+
+<table class="faculty-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Subject</th>
+            <th>Class</th>
+            <th>Actions</th> <!-- New column for actions -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var faculty in filteredFacultyEntries)
+        {
+            <tr>
+                <td>@faculty.Name</td>
+                <td>@faculty.Subject</td>
+                <td>@faculty.Class</td>
+                <td>
+                    <a href="editfaculty/@faculty.Id" class="btn btn-secondary btn-sm">Edit</a> <!-- Edit Button -->
+                    <button class="btn btn-danger btn-sm" @onclick="() => DeleteFaculty(faculty.Id)">Del</button> <!-- Delete Button -->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    /* Basic Styling */
+    .page-title {
+        font-size: 2rem;
+        text-align: center;
+        margin: 20px 0;
+        color: #333;
+    }
+
+    .instruction-text {
+        font-size: 1rem;
+        text-align: center;
+        margin: 10px 0;
+        color: #666;
+    }
+
+    .faculty-buttons-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .search-filters {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 200px;
+        margin: 0 10px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .faculty-table {
+        width: 80%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .faculty-table th, .faculty-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        .faculty-table th {
+            background-color: #f2f2f2;
+        }
+
+        .faculty-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .faculty-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    .btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    /* Basic Styling */
+    .page-title {
+        font-size: 2rem;
+        text-align: center;
+        margin: 20px 0;
+        color: #333;
+    }
+
+    .instruction-text {
+        font-size: 1rem;
+        text-align: center;
+        margin: 10px 0;
+        color: #666;
+    }
+
+    .faculty-buttons-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Styling the search filters */
+    .search-filters {
+        display: flex;
+        justify-content: center;
+        gap: 15px; /* Space between the input fields and button */
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 250px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    .faculty-table {
+        width: 80%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .faculty-table th, .faculty-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        .faculty-table th {
+            background-color: #f2f2f2;
+        }
+
+        .faculty-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .faculty-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    .btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+</style>
+
+@code {
+    private List<FacultyEntry> facultyEntries = new List<FacultyEntry>
+    {
+        new FacultyEntry { Id = 1, Name = "Samreen Khan", Subject = "English", Class = "1st Grade" },
+        new FacultyEntry { Id = 2, Name = "Ali Ahmed", Subject = "Mathematics", Class = "2nd Grade" },
+        new FacultyEntry { Id = 3, Name = "Ayesha Malik", Subject = "Science", Class = "3rd Grade" },
+        new FacultyEntry { Id = 4, Name = "Usman Shah", Subject = "Social Studies", Class = "4th Grade" },
+        new FacultyEntry { Id = 5, Name = "Fatima Ali", Subject = "Geography", Class = "5th Grade" },
+        new FacultyEntry { Id = 6, Name = "Bilal Khan", Subject = "History", Class = "6th Grade" },
+        new FacultyEntry { Id = 7, Name = "Sara Iqbal", Subject = "Computer Science", Class = "7th Grade" },
+        new FacultyEntry { Id = 8, Name = "Hassan Raza", Subject = "Physics", Class = "8th Grade" },
+        new FacultyEntry { Id = 9, Name = "Meher Zaman", Subject = "Chemistry", Class = "9th Grade" },
+        new FacultyEntry { Id = 10, Name = "Nadia Baig", Subject = "Biology", Class = "10th Grade" }
+    };
+
+    private string searchName = "";
+    private string searchSubject = "";
+
+    private List<FacultyEntry> filteredFacultyEntries => facultyEntries
+        .Where(f => (string.IsNullOrEmpty(searchName) || f.Name.Contains(searchName, StringComparison.OrdinalIgnoreCase)) &&
+                     (string.IsNullOrEmpty(searchSubject) || f.Subject.Contains(searchSubject, StringComparison.OrdinalIgnoreCase)))
+        .ToList();
+
+    private void SearchFaculty()
+    {
+        // Search logic is handled in the filteredFacultyEntries property
+    }
+
+    private void DeleteFaculty(int facultyId)
+    {
+        // Logic to delete the faculty entry based on facultyId
+        facultyEntries.RemoveAll(f => f.Id == facultyId);
+    }
+
+    public class FacultyEntry
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Subject { get; set; }
+        public string Class { get; set; }
+    }
+}

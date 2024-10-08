@@ -1,0 +1,238 @@
+﻿@page "/schoolclasses"
+@attribute [Authorize(Roles = "Administrator,school")]
+<PageTitle>Classes</PageTitle>
+
+<div class="classes-list-container">
+    <div class="header-row">
+        <h3 class="title">Classes List</h3>
+        <div class="controls">
+            <div class="rows-per-page">
+                Row Per Page
+                <select @bind="rowsPerPage" class="form-control">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                </select>
+            </div>
+
+            <div class="date-filter">
+                <input type="text" placeholder="09/25/2024 - 10/01/2024" class="form-control" />
+            </div>
+
+            <button class="btn filter-btn">
+                <i class="fa fa-filter"></i> Filter
+            </button>
+
+
+        </div>
+        <a href="sortingclass" class="sort-link">Sort by A-Z</a> <!-- Link to sorting page -->
+            
+       
+
+        <a href="newclassinfo" class="btn btn-primary">Add New Class</a> <!-- Button to add new class -->
+    </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" />
+                    </th>
+                    <th>ID</th>
+                    <th>Class</th>
+                    <th>Section</th>
+                    <th>No of Students</th>
+                    <th>No of Subjects</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var classItem in classesList)
+                {
+                    <tr>
+                        <td><input type="checkbox" /></td>
+                        <td><a href="#">@classItem.ID</a></td>
+                        <td>@classItem.Class</td>
+                        <td>@classItem.Section</td>
+                        <td>@classItem.NoOfStudents</td>
+                        <td>@classItem.NoOfSubjects</td>
+                        <td>
+                            @if (classItem.Status == "Active")
+                            {
+                                <span class="status-badge active">● Active</span>
+                            }
+                            else
+                            {
+                                <span class="status-badge inactive">● Inactive</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn action-btn" type="button" data-bs-toggle="dropdown">
+                                    <i class="fa fa-ellipsis-h"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Edit</a></li>
+                                    <li><a class="dropdown-item" href="#">Delete</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .classes-list-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    .controls {
+        display: flex;
+        gap: 10px;
+    }
+
+    .rows-per-page {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .rows-per-page select {
+            width: 60px;
+        }
+
+    .date-filter input {
+        width: 200px;
+    }
+
+    .btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .filter-btn {
+        background-color: #f1c40f;
+        color: white;
+    }
+
+    .sort-btn {
+        background-color: blue;
+        color: white !important; /* Ensures the text color stays white */
+        text-decoration: none;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .table th,
+        .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f4f6f9;
+            color: #2c3e50;
+        }
+
+        .table a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+    .status-badge {
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+        .status-badge.active {
+            color: #27ae60;
+            background-color: #eafaf1;
+        }
+
+        .status-badge.inactive {
+            color: #e74c3c;
+            background-color: #fdecea;
+        }
+
+    .action-btn {
+        background-color: transparent;
+        border: none;
+        color: #7f8c8d;
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .sort-link {
+        background-color: blue;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-family: 'Arial', sans-serif;
+        font-size: 1rem;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+        .sort-link:hover {
+            background-color: white;
+        }
+</style>
+
+@code {
+    private List<ClassItem> classesList = new List<ClassItem>
+    {
+        new ClassItem { ID = "C138038", Class = "I", Section = "A", NoOfStudents = 30, NoOfSubjects = 3, Status = "Active" },
+        new ClassItem { ID = "C138037", Class = "I", Section = "B", NoOfStudents = 25, NoOfSubjects = 3, Status = "Active" },
+        new ClassItem { ID = "C138036", Class = "II", Section = "A", NoOfStudents = 40, NoOfSubjects = 3, Status = "Active" },
+        new ClassItem { ID = "C138035", Class = "II", Section = "B", NoOfStudents = 35, NoOfSubjects = 3, Status = "Active" },
+        new ClassItem { ID = "C138034", Class = "II", Section = "C", NoOfStudents = 25, NoOfSubjects = 3, Status = "Inactive" },
+        new ClassItem { ID = "C138033", Class = "III", Section = "A", NoOfStudents = 30, NoOfSubjects = 3, Status = "Active" }
+    };
+
+    private int rowsPerPage = 10;
+
+    public class ClassItem
+    {
+        public string ID { get; set; }
+        public string Class { get; set; }
+        public string Section { get; set; }
+        public int NoOfStudents { get; set; }
+        public int NoOfSubjects { get; set; }
+        public string Status { get; set; }
+    }
+}
